@@ -9,6 +9,7 @@
 
 var time = require('../src/index.js');
 
+
 describe('index.js', function () {
     it('.nextTick', function (done) {
         var flag = false;
@@ -48,7 +49,7 @@ describe('index.js', function () {
         var timer = time.setInterval(function () {
             console.log(timer);
             times++;
-        }, 1);
+        }, 30);
 
         setTimeout(function () {
             console.log(timer);
@@ -58,7 +59,7 @@ describe('index.js', function () {
         }, 160);
     });
 
-    it('.setInterval/.clearInterval2', function (done) {
+    it('.setInterval/.clearInterval:2', function (done) {
         var times = 0;
         var evilNext = null;
         var timer = time.setInterval(function (next) {
@@ -69,7 +70,7 @@ describe('index.js', function () {
                 next();
             }, 1);
         }, 30);
-
+    
         setTimeout(function () {
             console.log(timer);
             time.clearInterval(timer);

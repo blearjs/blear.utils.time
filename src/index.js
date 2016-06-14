@@ -11,7 +11,7 @@ var date = require('blear.utils.date');
  * @param callback
  * @returns {Object|number}
  */
-exports.nextTick = function (callback) {
+var nextTick = exports.nextTick = function (callback) {
     return setTimeout(function () {
         callback();
     }, 0);
@@ -52,43 +52,38 @@ var buildInterval = function (builder) {
             id: 0,
             times: 0,
             startTime: now,
-            timeStamp: now,
+            timestamp: now,
             elapsedTime: 0,
             intervalTime: 0,
             stopTime: 0
         };
         var lastTime = timer.startTime;
+        var execute = function () {
+            if (callback.length === 1) {
+                callback(flash);
+            }
+            else {
+                callback();
+                flash();
+            }
+        };
         var flash = function () {
-            if (timer.stopTime) {
+            if (timer.stopTimestamp) {
                 return;
             }
-
+            
             timer.id = builder(function () {
                 var now = date.now();
                 timer.elapsedTime = now - timer.startTime;
                 timer.intervalTime = now - lastTime;
                 timer.times += 1;
-                timer.timeStamp = now;
+                timer.timestamp = now;
                 lastTime = now;
-                // setIntervalFrame(function(next){
-                //     // 当前事情做完在进入下一帧计算
-                //     next();
-                // });
-                if (callback.length === 1) {
-                    callback(flash);
-                }
-                // setIntervalFrame(function(){
-                //     // 连续执行
-                // });
-                else {
-                    callback();
-                    flash();
-                }
+                execute();
             }, interval || 1);
         };
 
-        flash();
-
+        nextTick(execute);
         return timer;
     };
 };
@@ -101,7 +96,7 @@ var buildInterval = function (builder) {
  */
 var unbuildInterval = function (unbuilder) {
     return function (timer) {
-        timer.stopTime = date.now();
+        timer.stopTimestamp = date.now();
         unbuilder(timer.id);
     };
 };
