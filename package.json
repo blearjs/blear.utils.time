@@ -38,6 +38,7 @@
   "dependencies": {},
   "peerDependencies": {
     "blear.utils.date": "1.x",
+    "blear.utils.typeis": "1.x",
     "blear.polyfills.time": "1.x"
   },
   "devDependencies": {

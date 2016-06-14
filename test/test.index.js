@@ -49,10 +49,9 @@ describe('index.js', function () {
         var timer = time.setInterval(function () {
             console.log(timer);
             times++;
-        }, 30);
+        }, 30, true);
 
         setTimeout(function () {
-            console.log(timer);
             time.clearInterval(timer);
             expect(times).toBeGreaterThan(0);
             done();
@@ -70,7 +69,7 @@ describe('index.js', function () {
                 next();
             }, 1);
         }, 30);
-    
+
         setTimeout(function () {
             console.log(timer);
             time.clearInterval(timer);

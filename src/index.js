@@ -4,6 +4,7 @@
 require('blear.polyfills.time');
 
 var date = require('blear.utils.date');
+var typeis = require('blear.utils.typeis');
 
 
 /**
@@ -42,11 +43,11 @@ var cancelFrame = exports.cancelFrame = function (frame) {
 
 /**
  * 生成 interval
- * @param builder
+ * @param build
  * @returns {Function}
  */
-var buildInterval = function (builder) {
-    return function (callback, interval) {
+var buildInterval = function (build) {
+    return function (callback, interval, ASAP) {
         var now = date.now();
         var timer = {
             id: 0,
@@ -55,14 +56,13 @@ var buildInterval = function (builder) {
             timestamp: now,
             elapsedTime: 0,
             intervalTime: 0,
-            stopTime: 0
+            stopTimestamp: 0
         };
         var lastTime = timer.startTime;
         var execute = function () {
             if (callback.length === 1) {
                 callback(flash);
-            }
-            else {
+            } else {
                 callback();
                 flash();
             }
@@ -71,8 +71,8 @@ var buildInterval = function (builder) {
             if (timer.stopTimestamp) {
                 return;
             }
-            
-            timer.id = builder(function () {
+
+            timer.id = build(function () {
                 var now = date.now();
                 timer.elapsedTime = now - timer.startTime;
                 timer.intervalTime = now - lastTime;
@@ -83,7 +83,17 @@ var buildInterval = function (builder) {
             }, interval || 1);
         };
 
-        nextTick(execute);
+        if (typeis.Boolean(interval)) {
+            ASAP = interval;
+            interval = 1;
+        }
+
+        if (ASAP) {
+            nextTick(execute);
+        } else {
+            flash();
+        }
+
         return timer;
     };
 };
@@ -91,13 +101,13 @@ var buildInterval = function (builder) {
 
 /**
  * 取消 interval
- * @param unbuilder
+ * @param unbuild
  * @returns {Function}
  */
-var unbuildInterval = function (unbuilder) {
+var unbuildInterval = function (unbuild) {
     return function (timer) {
         timer.stopTimestamp = date.now();
-        unbuilder(timer.id);
+        unbuild(timer.id);
     };
 };
 
