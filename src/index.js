@@ -53,10 +53,10 @@ var buildInterval = function (build) {
             id: 0,
             times: 0,
             startTime: now,
-            timestamp: now,
+            timeStamp: now,
             elapsedTime: 0,
             intervalTime: 0,
-            stopTimestamp: 0
+            stopTimeStamp: 0
         };
         var lastTime = timer.startTime;
         var execute = function () {
@@ -68,7 +68,7 @@ var buildInterval = function (build) {
             }
         };
         var flash = function () {
-            if (timer.stopTimestamp) {
+            if (timer.stopTimeStamp) {
                 return;
             }
 
@@ -77,7 +77,7 @@ var buildInterval = function (build) {
                 timer.elapsedTime = now - timer.startTime;
                 timer.intervalTime = now - lastTime;
                 timer.times += 1;
-                timer.timestamp = now;
+                timer.timeStamp = now;
                 lastTime = now;
                 execute();
             }, interval || 1);
@@ -106,7 +106,7 @@ var buildInterval = function (build) {
  */
 var unbuildInterval = function (unbuild) {
     return function (timer) {
-        timer.stopTimestamp = date.now();
+        timer.stopTimeStamp = date.now();
         unbuild(timer.id);
     };
 };
