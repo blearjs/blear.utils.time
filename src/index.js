@@ -1,8 +1,6 @@
 'use strict';
 
 
-require('blear.polyfills.time');
-
 var date = require('blear.utils.date');
 var typeis = require('blear.utils.typeis');
 
